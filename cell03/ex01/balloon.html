@@ -1,0 +1,87 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Explode this balloon</title>
+    <link rel="stylesheet" href="balloon.css">
+</head>
+<body>
+    <div class="container">
+        <h1>Explode this balloon!</h1>
+        <p>Click the balloon to make it grow. When it gets too big, it will explode!</p>
+        
+        <div id="balloon" class="balloon"></div>
+        
+        <div class="info">
+            <p>Size: <span id="size">200px</span></p>
+            <p>Color: <span id="color">Red</span></p>
+        </div>
+    </div>
+
+    <script>
+        const balloon = document.getElementById('balloon');
+        const sizeDisplay = document.getElementById('size');
+        const colorDisplay = document.getElementById('color');
+        
+        let currentSize = 200;
+        let currentColorIndex = 0;
+        const colors = ['red', 'green', 'blue'];
+        const colorNames = ['Red', 'Green', 'Blue'];
+        
+        function updateDisplay() {
+            sizeDisplay.textContent = currentSize + 'px';
+            colorDisplay.textContent = colorNames[currentColorIndex];
+        }
+        
+        function explode() {
+            currentSize = 200;
+            currentColorIndex = 0;
+            balloon.style.width = currentSize + 'px';
+            balloon.style.height = currentSize + 'px';
+            balloon.style.backgroundColor = colors[currentColorIndex];
+            updateDisplay();
+            
+            // Add explosion effect
+            balloon.style.transform = 'scale(1.2)';
+            balloon.style.opacity = '0.5';
+            setTimeout(() => {
+                balloon.style.transform = 'scale(1)';
+                balloon.style.opacity = '1';
+            }, 200);
+        }
+        
+        function clickBalloon() {
+            currentSize += 10;
+            currentColorIndex = (currentColorIndex + 1) % colors.length;
+            
+            if (currentSize > 420) {
+                explode();
+            } else {
+                balloon.style.width = currentSize + 'px';
+                balloon.style.height = currentSize + 'px';
+                balloon.style.backgroundColor = colors[currentColorIndex];
+                updateDisplay();
+            }
+        }
+        
+        function mouseLeaveBalloon() {
+            if (currentSize > 200) {
+                currentSize -= 5;
+                currentColorIndex = (currentColorIndex - 1 + colors.length) % colors.length;
+                
+                balloon.style.width = currentSize + 'px';
+                balloon.style.height = currentSize + 'px';
+                balloon.style.backgroundColor = colors[currentColorIndex];
+                updateDisplay();
+            }
+        }
+        
+        balloon.addEventListener('click', clickBalloon);
+        balloon.addEventListener('mouseleave', mouseLeaveBalloon);
+        
+        // Initialize display
+        updateDisplay();
+    </script>
+</body>
+</html>
