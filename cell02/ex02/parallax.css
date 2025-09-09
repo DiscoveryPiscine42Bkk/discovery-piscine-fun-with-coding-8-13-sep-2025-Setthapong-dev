@@ -1,0 +1,245 @@
+/* Reset and base styles */
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+body {
+    font-family: 'Arial', sans-serif;
+    line-height: 1.6;
+    color: #333;
+    overflow-x: hidden;
+}
+
+/* Parallax sections */
+.parallax-section {
+    height: 100vh;
+    position: relative;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    overflow: hidden;
+}
+
+/* Background images with parallax effect */
+.parallax-bg {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 120%;
+    background-size: cover;
+    background-position: center;
+    background-attachment: fixed;
+    background-repeat: no-repeat;
+    z-index: -1;
+}
+
+/* First background image - Golden Retrievers */
+.first-bg {
+    background-image: url('https://images.unsplash.com/photo-1552053831-71594a27632d?w=1920&h=1080&fit=crop');
+    filter: grayscale(100%) contrast(1.2);
+}
+
+/* Second background image - Fluffy Dogs */
+.second-bg {
+    background-image: url('https://images.unsplash.com/photo-1583337130417-3346a1be7dee?w=1920&h=1080&fit=crop');
+    filter: grayscale(100%) contrast(1.2);
+}
+
+/* Content overlay for parallax sections */
+.content-overlay {
+    position: relative;
+    z-index: 2;
+    text-align: center;
+    color: white;
+    text-shadow: 2px 2px 4px rgba(0,0,0,0.7);
+}
+
+.center-message {
+    font-size: clamp(3rem, 8vw, 6rem);
+    font-weight: bold;
+    letter-spacing: 2px;
+    animation: fadeInUp 1s ease-out;
+}
+
+/* Black section */
+.black-section {
+    background-color: #000;
+    color: white;
+    padding: 80px 20px;
+    text-align: center;
+    min-height: 100vh;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.black-content {
+    max-width: 800px;
+    margin: 0 auto;
+}
+
+.black-content h2 {
+    font-size: clamp(2.5rem, 6vw, 4rem);
+    margin-bottom: 30px;
+    color: #fff;
+    animation: slideInLeft 1s ease-out;
+}
+
+.black-content p {
+    font-size: clamp(1.1rem, 3vw, 1.5rem);
+    margin-bottom: 20px;
+    opacity: 0.9;
+    line-height: 1.8;
+}
+
+/* Additional content section */
+.additional-content {
+    background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+    color: white;
+    padding: 80px 20px;
+    min-height: 100vh;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.content-wrapper {
+    max-width: 1000px;
+    margin: 0 auto;
+    text-align: center;
+}
+
+.content-wrapper h2 {
+    font-size: clamp(2rem, 5vw, 3rem);
+    margin-bottom: 30px;
+    animation: fadeInUp 1s ease-out;
+}
+
+.content-wrapper p {
+    font-size: clamp(1rem, 2.5vw, 1.3rem);
+    margin-bottom: 40px;
+    opacity: 0.9;
+    line-height: 1.8;
+}
+
+/* Features grid */
+.features {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+    gap: 30px;
+    margin-top: 40px;
+}
+
+.feature {
+    background: rgba(255,255,255,0.1);
+    padding: 30px;
+    border-radius: 15px;
+    backdrop-filter: blur(10px);
+    border: 1px solid rgba(255,255,255,0.2);
+    transition: transform 0.3s ease;
+}
+
+.feature:hover {
+    transform: translateY(-10px);
+}
+
+.feature h3 {
+    font-size: 1.5rem;
+    margin-bottom: 15px;
+    color: #fff;
+}
+
+.feature p {
+    font-size: 1rem;
+    opacity: 0.8;
+    margin: 0;
+}
+
+/* Animations */
+@keyframes fadeInUp {
+    from {
+        opacity: 0;
+        transform: translateY(30px);
+    }
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+@keyframes slideInLeft {
+    from {
+        opacity: 0;
+        transform: translateX(-50px);
+    }
+    to {
+        opacity: 1;
+        transform: translateX(0);
+    }
+}
+
+/* Responsive design */
+@media (max-width: 768px) {
+    .parallax-bg {
+        background-attachment: scroll;
+        height: 100%;
+    }
+    
+    .center-message {
+        font-size: clamp(2rem, 6vw, 4rem);
+    }
+    
+    .black-content h2 {
+        font-size: clamp(2rem, 5vw, 3rem);
+    }
+    
+    .black-content p {
+        font-size: clamp(1rem, 2.5vw, 1.2rem);
+    }
+    
+    .features {
+        grid-template-columns: 1fr;
+        gap: 20px;
+    }
+}
+
+@media (max-width: 480px) {
+    .parallax-section {
+        height: 80vh;
+    }
+    
+    .black-section,
+    .additional-content {
+        padding: 40px 15px;
+    }
+    
+    .center-message {
+        font-size: clamp(1.5rem, 5vw, 3rem);
+    }
+}
+
+/* Smooth scrolling */
+html {
+    scroll-behavior: smooth;
+}
+
+/* Custom scrollbar */
+::-webkit-scrollbar {
+    width: 8px;
+}
+
+::-webkit-scrollbar-track {
+    background: #f1f1f1;
+}
+
+::-webkit-scrollbar-thumb {
+    background: #888;
+    border-radius: 4px;
+}
+
+::-webkit-scrollbar-thumb:hover {
+    background: #555;
+}
