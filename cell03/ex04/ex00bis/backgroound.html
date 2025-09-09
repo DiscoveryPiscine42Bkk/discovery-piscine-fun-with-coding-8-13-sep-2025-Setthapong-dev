@@ -1,0 +1,50 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Change Background Color - jQuery Version</title>
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+    <style>
+        body {
+            margin: 0;
+            padding: 0;
+            height: 100vh;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            background-color: white;
+            transition: background-color 0.3s ease;
+        }
+
+        button {
+            padding: 15px 30px;
+            font-size: 16px;
+            border: 2px solid #333;
+            background-color: white;
+            cursor: pointer;
+            border-radius: 5px;
+        }
+
+        button:hover {
+            background-color: #f0f0f0;
+        }
+    </style>
+</head>
+<body>
+    <button id="changeColorBtn">Click me!</button>
+
+    <script>
+        $(document).ready(function() {
+            const colors = ['red', 'blue', 'green', 'yellow', 'purple', 'orange'];
+            
+            function changeBackgroundColor() {
+                const randomColor = colors[Math.floor(Math.random() * colors.length)];
+                $('body').css('background-color', randomColor);
+            }
+            
+            $('#changeColorBtn').click(changeBackgroundColor);
+        });
+    </script>
+</body>
+</html>

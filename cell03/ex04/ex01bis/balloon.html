@@ -1,0 +1,198 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Explode this balloon - jQuery Version</title>
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+    <style>
+        body {
+            margin: 0;
+            padding: 0;
+            font-family: Arial, sans-serif;
+            background: linear-gradient(135deg, #f5f7fa 0%, #c3cfe2 100%);
+            min-height: 100vh;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .container {
+            text-align: center;
+            background: white;
+            padding: 40px;
+            border-radius: 15px;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.1);
+            max-width: 500px;
+            width: 90%;
+        }
+
+        h1 {
+            color: #333;
+            margin-bottom: 20px;
+            font-size: 2rem;
+        }
+
+        p {
+            color: #666;
+            margin-bottom: 30px;
+            line-height: 1.6;
+        }
+
+        .balloon {
+            width: 200px;
+            height: 200px;
+            background-color: red;
+            border-radius: 50%;
+            margin: 30px auto;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            box-shadow: 0 5px 15px rgba(0,0,0,0.2);
+            position: relative;
+        }
+
+        .balloon:hover {
+            transform: scale(1.05);
+            box-shadow: 0 8px 25px rgba(0,0,0,0.3);
+        }
+
+        .balloon:active {
+            transform: scale(0.95);
+        }
+
+        .info {
+            margin-top: 30px;
+            padding: 20px;
+            background: #f8f9fa;
+            border-radius: 10px;
+            border: 2px solid #e9ecef;
+        }
+
+        .info p {
+            margin: 10px 0;
+            font-weight: bold;
+            color: #333;
+        }
+
+        #size, #color {
+            color: #007bff;
+            font-size: 1.1em;
+        }
+
+        @keyframes explode {
+            0% {
+                transform: scale(1);
+                opacity: 1;
+            }
+            50% {
+                transform: scale(1.3);
+                opacity: 0.7;
+            }
+            100% {
+                transform: scale(1);
+                opacity: 1;
+            }
+        }
+
+        .balloon.exploding {
+            animation: explode 0.5s ease-in-out;
+        }
+
+        @media (max-width: 480px) {
+            .container {
+                padding: 20px;
+                margin: 10px;
+            }
+            
+            h1 {
+                font-size: 1.5rem;
+            }
+            
+            .balloon {
+                width: 150px;
+                height: 150px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>Explode this balloon!</h1>
+        <p>Click the balloon to make it grow. When it gets too big, it will explode!</p>
+        
+        <div id="balloon" class="balloon"></div>
+        
+        <div class="info">
+            <p>Size: <span id="size">200px</span></p>
+            <p>Color: <span id="color">Red</span></p>
+        </div>
+    </div>
+
+    <script>
+        $(document).ready(function() {
+            let currentSize = 200;
+            let currentColorIndex = 0;
+            const colors = ['red', 'green', 'blue'];
+            const colorNames = ['Red', 'Green', 'Blue'];
+            
+            function updateDisplay() {
+                $('#size').text(currentSize + 'px');
+                $('#color').text(colorNames[currentColorIndex]);
+            }
+            
+            function explode() {
+                currentSize = 200;
+                currentColorIndex = 0;
+                $('#balloon').css({
+                    'width': currentSize + 'px',
+                    'height': currentSize + 'px',
+                    'background-color': colors[currentColorIndex]
+                });
+                updateDisplay();
+                
+                // Add explosion effect
+                $('#balloon').addClass('exploding');
+                setTimeout(function() {
+                    $('#balloon').removeClass('exploding');
+                }, 500);
+            }
+            
+            function clickBalloon() {
+                currentSize += 10;
+                currentColorIndex = (currentColorIndex + 1) % colors.length;
+                
+                if (currentSize > 420) {
+                    explode();
+                } else {
+                    $('#balloon').css({
+                        'width': currentSize + 'px',
+                        'height': currentSize + 'px',
+                        'background-color': colors[currentColorIndex]
+                    });
+                    updateDisplay();
+                }
+            }
+            
+            function mouseLeaveBalloon() {
+                if (currentSize > 200) {
+                    currentSize -= 5;
+                    currentColorIndex = (currentColorIndex - 1 + colors.length) % colors.length;
+                    
+                    $('#balloon').css({
+                        'width': currentSize + 'px',
+                        'height': currentSize + 'px',
+                        'background-color': colors[currentColorIndex]
+                    });
+                    updateDisplay();
+                }
+            }
+            
+            $('#balloon').click(clickBalloon);
+            $('#balloon').mouseleave(mouseLeaveBalloon);
+            
+            // Initialize display
+            updateDisplay();
+        });
+    </script>
+</body>
+</html>

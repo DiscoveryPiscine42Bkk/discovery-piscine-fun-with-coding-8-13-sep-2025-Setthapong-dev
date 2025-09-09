@@ -1,0 +1,248 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>To do or not to do - jQuery Version</title>
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            margin: 0;
+            padding: 0;
+            min-height: 100vh;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+        }
+        
+        .container {
+            background: white;
+            padding: 40px;
+            border-radius: 15px;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.2);
+            max-width: 600px;
+            width: 90%;
+            min-height: 500px;
+        }
+        
+        h1 {
+            text-align: center;
+            color: #333;
+            margin-bottom: 30px;
+            font-size: 2.5rem;
+        }
+        
+        .new-button {
+            background: linear-gradient(45deg, #667eea, #764ba2);
+            color: white;
+            border: none;
+            padding: 15px 30px;
+            font-size: 18px;
+            font-weight: bold;
+            border-radius: 25px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            margin-bottom: 30px;
+            display: block;
+            margin-left: auto;
+            margin-right: auto;
+        }
+        
+        .new-button:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 5px 15px rgba(102, 126, 234, 0.4);
+        }
+        
+        .new-button:active {
+            transform: translateY(0);
+        }
+        
+        #ft_list {
+            min-height: 300px;
+            border: 2px dashed #ddd;
+            border-radius: 10px;
+            padding: 20px;
+            background: #f8f9fa;
+        }
+        
+        .todo-item {
+            background: white;
+            padding: 15px;
+            margin-bottom: 10px;
+            border-radius: 8px;
+            border-left: 4px solid #667eea;
+            box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+            cursor: pointer;
+            transition: all 0.3s ease;
+            word-wrap: break-word;
+        }
+        
+        .todo-item:hover {
+            background: #f0f8ff;
+            transform: translateX(5px);
+            box-shadow: 0 4px 10px rgba(0,0,0,0.15);
+        }
+        
+        .todo-item:active {
+            transform: translateX(2px);
+        }
+        
+        .empty-message {
+            text-align: center;
+            color: #666;
+            font-style: italic;
+            padding: 40px;
+        }
+        
+        .todo-counter {
+            text-align: center;
+            color: #666;
+            margin-top: 20px;
+            font-size: 14px;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>To do or not to do</h1>
+        <button class="new-button" id="newButton">New</button>
+        
+        <div id="ft_list">
+            <div class="empty-message">No tasks yet. Click "New" to add your first task!</div>
+        </div>
+        
+        <div class="todo-counter">
+            <span id="todoCount">0</span> task(s)
+        </div>
+    </div>
+
+    <script>
+        $(document).ready(function() {
+            // Load todos from cookie when page loads
+            loadTodosFromCookie();
+            updateTodoCount();
+            
+            // Function to save todos to cookie
+            function saveTodosToCookie() {
+                const todos = [];
+                $('.todo-item').each(function() {
+                    todos.push($(this).text().trim());
+                });
+                
+                // Save as JSON string in cookie
+                document.cookie = `todos=${JSON.stringify(todos)}; expires=${new Date(Date.now() + 365 * 24 * 60 * 60 * 1000).toUTCString()}; path=/`;
+            }
+            
+            // Function to load todos from cookie
+            function loadTodosFromCookie() {
+                const cookies = document.cookie.split(';');
+                let todos = [];
+                
+                for (let cookie of cookies) {
+                    const [name, value] = cookie.trim().split('=');
+                    if (name === 'todos') {
+                        try {
+                            todos = JSON.parse(decodeURIComponent(value));
+                        } catch (e) {
+                            console.error('Error parsing todos from cookie:', e);
+                            todos = [];
+                        }
+                        break;
+                    }
+                }
+                
+                // Clear existing todos
+                $('#ft_list').empty();
+                
+                // Add todos from cookie
+                if (todos.length > 0) {
+                    todos.forEach(function(todoText) {
+                        addTodoItem(todoText);
+                    });
+                } else {
+                    showEmptyMessage();
+                }
+            }
+            
+            // Function to show empty message
+            function showEmptyMessage() {
+                $('#ft_list').html('<div class="empty-message">No tasks yet. Click "New" to add your first task!</div>');
+            }
+            
+            // Function to add a new todo
+            function addTodo() {
+                const todoText = prompt('Enter your new task:');
+                
+                // Check if user entered something and it's not empty
+                if (todoText !== null && todoText.trim() !== '') {
+                    addTodoItem(todoText.trim());
+                    saveTodosToCookie();
+                    updateTodoCount();
+                }
+            }
+            
+            // Function to add todo item to DOM
+            function addTodoItem(text) {
+                // Remove empty message if it exists
+                $('.empty-message').remove();
+                
+                // Create new todo div
+                const todoDiv = $('<div class="todo-item"></div>').text(text);
+                
+                // Add click event to remove todo
+                todoDiv.click(function() {
+                    removeTodo($(this));
+                });
+                
+                // Add to the top of the list
+                $('#ft_list').prepend(todoDiv);
+            }
+            
+            // Function to remove a todo
+            function removeTodo(todoElement) {
+                const todoText = todoElement.text().trim();
+                const confirmed = confirm(`Are you sure you want to remove this task?\n\n"${todoText}"`);
+                
+                if (confirmed) {
+                    // Remove from DOM
+                    todoElement.remove();
+                    
+                    // Save to cookie
+                    saveTodosToCookie();
+                    updateTodoCount();
+                    
+                    // Show empty message if no todos left
+                    if ($('.todo-item').length === 0) {
+                        showEmptyMessage();
+                    }
+                }
+            }
+            
+            // Function to update todo counter
+            function updateTodoCount() {
+                const count = $('.todo-item').length;
+                $('#todoCount').text(count);
+            }
+            
+            // Add event listeners
+            $('#newButton').click(addTodo);
+            
+            // Add keyboard shortcuts
+            $(document).keydown(function(event) {
+                // Ctrl + N to add new todo
+                if (event.ctrlKey && event.key === 'n') {
+                    event.preventDefault();
+                    addTodo();
+                }
+            });
+            
+            // Console log for debugging
+            console.log('Todo List loaded successfully with jQuery!');
+            console.log('Use Ctrl+N to quickly add a new task');
+        });
+    </script>
+</body>
+</html>
